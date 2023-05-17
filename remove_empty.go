@@ -1,17 +1,48 @@
 package empty
 
 import (
+	"encoding/json"
+	"errors"
+	"log"
 	"reflect"
 )
 
-func RemoveEmptyValues(data interface{}) interface{} {
+func RemoveEmptyValuesFromStruct(data interface{}) (interface{}, error) {
+	if reflect.ValueOf(data).Kind() != reflect.Struct {
+		return nil, errors.New("the value you have passed is not a struct")
+	}
+
+	b, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return RemoveEmptyValueFromJson(string(b))
+}
+
+func RemoveEmptyValueFromJson(jsonString string) (interface{}, error) {
+	if !json.Valid([]byte(jsonString)) {
+		return nil, errors.New("this is not a valid json string")
+	}
+
+	var data interface{}
+
+	if err := json.Unmarshal([]byte(jsonString), &data); err != nil {
+		return nil, err
+	}
+
+	return removeEmptyValues(data), nil
+}
+
+func removeEmptyValues(data interface{}) interface{} {
+	log.Println("mmmh here", reflect.TypeOf(data))
 	switch value := data.(type) {
 	case map[string]interface{}:
 		for key, v := range value {
 			if isEmpty(v) {
 				delete(value, key)
 			} else {
-				value[key] = RemoveEmptyValues(v)
+				value[key] = removeEmptyValues(v)
 			}
 		}
 		return value
@@ -19,7 +50,7 @@ func RemoveEmptyValues(data interface{}) interface{} {
 		var result []interface{}
 		for _, v := range value {
 			if !isEmpty(v) {
-				result = append(result, RemoveEmptyValues(v))
+				result = append(result, removeEmptyValues(v))
 			}
 		}
 		return result
