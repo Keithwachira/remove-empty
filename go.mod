@@ -1,3 +1,3 @@
-module github.com/TykTechnologies/remove-zero
+module github.com/Keithwachira/remove-zero
 
 go 1.20
