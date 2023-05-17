@@ -1,3 +1,3 @@
-module github.com/Keithwachira/remove-zero
+module github.com/Keithwachira/remove-empty
 
 go 1.20
