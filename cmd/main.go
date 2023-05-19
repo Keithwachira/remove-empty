@@ -15,7 +15,8 @@ func main() {
 			"address": {
 				"street": "123 Main St",
 				"city": "",
-				"zip": 0
+				"zip": 0,
+               "name":"itachi"
 			},
 			"numbers": [1, 2, 0, 3, 0],
 			"emptyArray": [],
