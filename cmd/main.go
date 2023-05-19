@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
@@ -9,8 +8,7 @@ import (
 )
 
 func main() {
-	// Example JSON data
-	/*jsonData := `{
+	jsonData := `{
 			"name": "iatchi",
 			"age": 30,
 	        "mmmh":"",
@@ -22,7 +20,7 @@ func main() {
 			"numbers": [1, 2, 0, 3, 0],
 			"emptyArray": [],
 			"emptyObject": {}
-		}`*/
+		}`
 
 	type GodMode struct {
 		Name  string
@@ -38,29 +36,19 @@ func main() {
 		Keith: "",
 	}
 
-	/*var data interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		fmt.Println("Failed to unmarshal JSON:", err)
-		return
-	}*/
-
 	fromStruct, err := empty.RemoveEmptyValuesFromStruct(data)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Println(fromStruct)
 
-	/*result, err := empty.RemoveEmptyValueFromJson(jsonData)
+	fmt.Printf("%+v\n", fromStruct)
+
+	result, err := empty.RemoveEmptyValueFromJSON(jsonData)
 	if err != nil {
 		fmt.Println("remove empty json failed:", err)
 		return
-	}*/
-	resultJSON, err := json.Marshal(fromStruct)
-	if err != nil {
-		fmt.Println("Failed to marshal JSON:", err)
-		return
 	}
 
-	fmt.Println(string(resultJSON))
+	fmt.Printf("%+v\n", result)
 }

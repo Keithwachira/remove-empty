@@ -3,7 +3,6 @@ package empty
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"reflect"
 )
 
@@ -17,10 +16,10 @@ func RemoveEmptyValuesFromStruct(data interface{}) (interface{}, error) {
 		return nil, err
 	}
 
-	return RemoveEmptyValueFromJson(string(b))
+	return RemoveEmptyValueFromJSON(string(b))
 }
 
-func RemoveEmptyValueFromJson(jsonString string) (interface{}, error) {
+func RemoveEmptyValueFromJSON(jsonString string) (interface{}, error) {
 	if !json.Valid([]byte(jsonString)) {
 		return nil, errors.New("this is not a valid json string")
 	}
@@ -35,7 +34,6 @@ func RemoveEmptyValueFromJson(jsonString string) (interface{}, error) {
 }
 
 func removeEmptyValues(data interface{}) interface{} {
-	log.Println("mmmh here", reflect.TypeOf(data))
 	switch value := data.(type) {
 	case map[string]interface{}:
 		for key, v := range value {
@@ -45,25 +43,29 @@ func removeEmptyValues(data interface{}) interface{} {
 				value[key] = removeEmptyValues(v)
 			}
 		}
+
 		return value
 	case []interface{}:
 		var result []interface{}
+
 		for _, v := range value {
 			if !isEmpty(v) {
 				result = append(result, removeEmptyValues(v))
 			}
 		}
+
 		return result
 	default:
 		return value
 	}
 }
 
-// isEmpty returns true if the passed value is the zero object
+// isEmpty returns true if the passed value is the zero object.
 func isEmpty(value interface{}) bool {
 	if value == nil {
 		return true
 	}
+
 	v := reflect.ValueOf(value)
 	switch v.Kind() {
 	case reflect.Slice, reflect.Map:
